@@ -1,40 +1,9 @@
-variable "public_subnet_id" {
-  description = "List of subnet IDs where instances will be launched"
-  type        = string
-}
-
-variable "private_subnet_id" {
-  description = "List of subnet IDs where instances will be launched"
-  type        = string
-}
-
-variable "security_group_id" {
-  description = "Security group ID to assign to EC2 instances"
-  type        = string
-}
-
-variable "control_plane_count" {
-  type        = number
-}
-
-variable "node_count" {
-  type        = number
-}
-
-variable "ami_id" {
-  type        = string
-}
-
-variable "instance_type" {
-  type        = string
-}
-
 resource "aws_instance" "control_plane" {
   count                     = var.control_plane_count
   ami                       = var.ami_id
   instance_type             = var.instance_type
   subnet_id                 = var.public_subnet_id
-  vpc_security_group_ids    = [var.security_group_id]
+  vpc_security_group_ids    = [var.control_plane_sg_id]
   associate_public_ip_address = true
   key_name = "pegasus"
   tags = {
@@ -47,7 +16,7 @@ resource "aws_instance" "node" {
   ami                       = var.ami_id
   instance_type             = var.instance_type
   subnet_id                 = var.private_subnet_id
-  vpc_security_group_ids    = [var.security_group_id]
+  vpc_security_group_ids    = [var.node_sg_id]
   associate_public_ip_address = false
   key_name = "pegasus"
   tags = {
@@ -55,6 +24,10 @@ resource "aws_instance" "node" {
   }
 }
 
-output "instance_ids" {
-  value = aws_instance.control_plane[*].id
+output "control_plane_ips" {
+  value = aws_instance.control_plane[*].public_ip
+}
+
+output "node_ips" {
+  value = aws_instance.node[*].private_ip
 }

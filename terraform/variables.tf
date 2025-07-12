@@ -16,5 +16,5 @@ variable "instance_type" {
 
 variable "ami_id" {
   description = "Amazon Linux or Ubuntu AMI for your region"
-  default     = "ami-08abeca95324c9c91"
+  default     = "ami-0f918f7e67a3323f0"
 }
