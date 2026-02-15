@@ -1,32 +1,15 @@
-provider "aws" {
-  region = var.region
-}
-
-module "vpc" {
-  source = "./vpc"
-}
-
-module "security" {
-  source = "./security"
-  vpc_id = module.vpc.vpc_id
-}
-
-module "compute" {
-  source = "./compute"
-  public_subnet_id        = module.vpc.public_subnet_id
-  private_subnet_id        = module.vpc.private_subnet_id
-  control_plane_sg_id = module.security.control_plane_sg_id
-  node_sg_id = module.security.node_sg_id
-  control_plane_count     = var.control_plane_count
-  node_count     = var.node_count
-  ami_id         = var.ami_id
-  instance_type  = var.instance_type
-}
-
-output "control_plane_ips" {
-  value = module.compute.control_plane_ips
-}
-
-output "node_ips" {
-  value = module.compute.node_ips
-}
+# ============================================================================
+# Kubernetes Cluster on AWS - Main Entry Point
+# ============================================================================
+# This file is intentionally minimal. Resources are organized in:
+#
+# - provider.tf         : Terraform & AWS provider configuration
+# - locals.tf           : Local variables and computed values
+# - input_variables.tf  : Variable definitions
+# - datasources.tf      : Data sources (AMI lookup)
+# - vpc.tf              : VPC, Subnets, Internet Gateway, NAT Gateway, Route Tables
+# - security_groups.tf  : Security Group rules for K8s cluster
+# - ec2.tf              : EC2 instances for K8s nodes
+# - k8s_provisioning.tf : Kubernetes installation and cluster setup
+# - outputs.tf          : Output values
+# ============================================================================
