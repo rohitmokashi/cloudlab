@@ -69,7 +69,6 @@ variable "private_subnet_cidr" {
 variable "availability_zone" {
   description = "Availability zone for the subnets"
   type        = string
-  default     = "ap-south-1a"
 }
 
 variable "cluster_name" {
