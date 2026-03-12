@@ -105,6 +105,15 @@ resource "aws_security_group" "k8s_sg" {
     self        = true
   }
 
+  # Application NodePort Services
+  ingress {
+    description = "Application NodePort Services"
+    from_port   = 30000
+    to_port     = 40000
+    protocol    = "udp"
+    self        = true
+  }
+
   # Allow all traffic within the security group
   ingress {
     description = "Internal cluster communication"
